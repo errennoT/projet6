@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <form method="post">
+        {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+        <div class="mb-3">
+            Vous êtes connecté sous le pseudo
+            "{{ app.user.username }}",
+            <a href="{{ path('app_logout') }}">se déconnecter ?</a>
+        </div>
+        {% endif %}
+
+        {% for message in app.flashes('success')%}
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <h1 class="h3 mb-3 font-weight-normal">Se connecter</h1>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <label for="inputUsername" class="sr-only">Pseudo</label>
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control"
+                    placeholder="Pseudo" required autofocus>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-4 mt-4">
+                <label for="inputPassword" class="sr-only">Mot de passe</label>
+                <input type="password" name="password" id="inputPassword" class="form-control"
+                    placeholder="Mot de passe" required>
+            </div>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        <div class="row justify-content-md-center">
+            <div class="col-md-4 mt-4">
+                <button class="btn btn-primary" type="submit">
+                    Connexion
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="row justify-content-md-center">
+        <div class="col-md-2 mt-4">
+            <a href="{{path('inscription')}}">Pas de compte ?</a>
+        </div>
+        <div class="col-md-2 mt-4">
+            <a href="{{path('forgot_password')}}">Mot de passe oublié ?</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
