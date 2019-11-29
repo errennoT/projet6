@@ -85,7 +85,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/trick/supprimer-trick/{trick}", name="trick_delete", methods="DELETE")
      * @param Trick $trick
      * @param Request $request
@@ -94,7 +94,7 @@ class TrickController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->get('_token'))) {
 
-            $fileUploader->removeFile($trick->getNameDefaultPicture ());
+            $fileUploader->removeFile($trick->getNameDefaultPicture());
             $pictures = $trick->getPictureTricks();
             foreach ($pictures as $picture) {
                 $fileUploader->removeFile($picture->getName());
@@ -114,7 +114,7 @@ class TrickController extends AbstractController
      */
     public function showTrick(Trick $trick): Response
     {
-       
+
         return $this->render('trick/showTrick.html.twig', [
             'trick' => $trick,
             'pictures' => $trick->getPictureTricks(),
@@ -152,7 +152,42 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/trick/modifier-trick/delete/default-photos/{id}", name="trick_delete_default_picture", methods="POST")
+     * @param Trick $trick
+     * @param FileUploader $fileUploader
+     * @param Request $request
+     */
+    public function deleteDefaultPicture(Trick $trick, Request $request, FileUploader $fileUploader)
+    {
+        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->get('_token'))) {
+            $trick->setModifiedAt(new \DateTime());
+            $fileUploader->removeFile($trick->getNameDefaultPicture());
+            $trick->setNameDefaultPicture("NULL");
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Photo de mise en avant supprimée avec succès');
+            return $this->redirectToRoute('trick_edit', [
+                'id' => $trick->getId()
+            ]);
+        }
+    }
 
- 
+    /**
+     * @Route("/trick/modifier-trick/delete/photos/{id}", name="trick_delete_picture", methods="DELETE")
+     * @param PictureTrick $pictureTrick
+     * @param FileUploader $fileUploader
+     * @param Request $request
+     */
+    public function deletePicture(PictureTrick $pictureTrick, Request $request, FileUploader $fileUploader)
+    {
+        if ($this->isCsrfTokenValid('delete' . $pictureTrick->getId(), $request->get('_token'))) {
+            $fileUploader->removeFile($pictureTrick->getName());
+            $this->entityManager->remove($pictureTrick);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Photo supprimée avec succès');
+            return $this->redirectToRoute('trick_edit', [
+                'id' => $pictureTrick->getRelation()->getId()
+            ]);
+        }
+    }
 }
-
