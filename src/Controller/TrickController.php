@@ -112,15 +112,31 @@ class TrickController extends AbstractController
      * @param Trick $trick
      * @return Response
      */
-    public function showTrick(Trick $trick): Response
+    public function showTrick(Trick $trick, Request $request, UserRepository $userRepository, CommentRepository $commentRepository): Response
     {
+        $comments = $commentRepository->findAllByTrick($trick->getId());
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class);
+        $form->handleRequest($request);
 
-        return $this->render('trick/showTrick.html.twig', [
-            'trick' => $trick,
-            'pictures' => $trick->getPictureTricks(),
-            'videos' => $trick->getVideoTricks(),
-        ]);
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment = $form->getData();
+            $comment->setTrick($trick);
+
+            $GetSession = $this->session->all();
+            $GetSessionName = $GetSession["_security.last_username"];
+
+            $user = $userRepository->findOneByUsername($GetSessionName);
+            $comment->setUserId($user);
+
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Commentaire ajouté avec succès');
+            return $this->redirectToRoute('trick_show', [
+                'trick' => $trick->getId(),
+                'category' => $trick->getCategory()
+            ]);
+        }
 
     /**
      * @Route("/trick/modifier-trick/{id}", name="trick_edit", methods="GET|POST")
