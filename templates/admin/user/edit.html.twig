@@ -1,0 +1,39 @@
+{% extends 'base.html.twig'  %}
+
+{% block title %}
+Modifier {{user.username}}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <h1 class="h2 mb-3 font-weight-normal">Modifier {{user.username}}</h1>
+        </div>
+    </div>
+
+    {{ form_start(form) }}
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            {{ form_row(form.username) }}
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            {{ form_row(form.email) }}
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <button class="btn btn-primary mt-4">Modifier</button>
+    </div>
+    {{ form_end(form) }}
+    <div class="row justify-content-md-center">
+        <a href="{{path('admin_password_edit', {id: user.id}) }}"><button class="btn btn-warning mt-4">Changer mdp</button></a>
+    </div>
+        <div class="row justify-content-md-center">
+        <a href="{{path('admin_edit_picture', {id: user.id}) }}"><button class="btn btn-warning mt-4">Changer la photo de profil</button></a>
+    </div>
+
+</div>
+{% endblock %}

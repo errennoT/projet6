@@ -1,0 +1,45 @@
+{% extends 'base.html.twig'  %}
+
+{% block title %}
+Photo de profil
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+
+    <div class="row justify-content-md-center">
+        <div class="col-sm-4">
+            <h1 class="h2 mb-3 font-weight-normal">Modifier la photo de profil de {{user.username}}</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            {% if picture is empty %}
+            <img src="{{ asset('images/default_picture.jpeg') }}" height="auto" width="320" style="max-height:320px">
+            {% else %}
+            <img src="{{ asset('uploads/'~ picture.name) }}" height="auto" width="320" style="max-height:320px">
+            {% endif%}
+        </div>
+    </div>
+    {{ form_start(form) }}
+    <div class="row justify-content-md-center">
+        <div class="col-md-4 mt-5">
+            {{ form_row(form.file) }}
+        </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">
+                {{ (form.vars.value.pathPicture is defined) ? "Modifer" : "Ajouter une image"}}
+            </button>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+</div>
+
+</div>
+{% endblock %}
