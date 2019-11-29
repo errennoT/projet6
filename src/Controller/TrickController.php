@@ -257,4 +257,21 @@ class TrickController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+     /**
+     * @Route("/trick/modifier-trick/delete/video/{id}", name="trick_delete_video", methods="DELETE")
+     * @param VideoTrick $videoTrick
+     * @param Request $request
+     */
+    public function deleteVideo(VideoTrick $videoTrick, Request $request)
+    {
+        if ($this->isCsrfTokenValid('delete' . $videoTrick->getId(), $request->get('_token'))) {
+            $this->entityManager->remove($videoTrick);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Vidéo supprimée avec succès');
+            return $this->redirectToRoute('trick_edit', [
+                'id' => $videoTrick->getRelation()->getId()
+            ]);
+        }
+    }
 }
