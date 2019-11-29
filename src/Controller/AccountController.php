@@ -79,7 +79,43 @@ class AccountController extends AbstractController
         }
     }
 
-   
+    /**
+     * @Route("/modifier-mdp/{id}", name="password_edit", methods="GET|POST")
+     * @param User $user
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return Response
+     */
+    public function editPassword(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    {
+        if ($this->accountAccessSecurity($user)) {
+            $form = $this->createForm(UpdatePasswordType::class, $user);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($passwordEncoder->isPasswordValid($user, $user->getOldPassword())) {
+                    $newEncodedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+                    $user->setPassword($newEncodedPassword);
+
+                    $this->entityManager->flush();
+                    $this->addFlash('success', 'Mot de passe modifié avec succès');
+
+                    return $this->redirectToRoute('profile', [
+                        'id' => $user->getId()
+                    ]);
+                } else {
+                    $form->addError(new FormError('Ancien mot de passe incorrect'));
+                }
+            }
+
+            return $this->render('profile/editPassword.html.twig', [
+                'user' => $user,
+                'form' => $form->createView()
+            ]);
+        }
+    }
+
+  
 
     /**
      * @param User $user
