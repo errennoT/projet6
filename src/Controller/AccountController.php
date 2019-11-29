@@ -115,7 +115,51 @@ class AccountController extends AbstractController
         }
     }
 
-  
+    /**
+     * @Route("/photo-de-profil/{id}", name="picture_edit")
+     * @param User $user
+     * @param Request $request
+     * @return Response
+     */
+    public function editPicture(User $user, Request $request, FileUploader $fileUploader): Response
+    {
+        $profilePicture = new PictureUser;
+
+        $form = $this->createForm(UserProfilePictureType::class, $profilePicture);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if (!empty($user->getPictureUser())) {
+                $fileUploader->removeFile($user->getPictureUser()->getName());
+                $this->entityManager->remove($user->getPictureUser());
+                $this->entityManager->flush();
+            }
+            $profilePicture = $form->getData();
+
+            $file = $profilePicture->getFile();
+            $fileName = $fileUploader->upload($file);
+
+            $profilePicture->setName($fileName);
+            $user->setPictureUser($profilePicture);
+            $this->entityManager->flush();
+            $this->addFlash(
+                'success',
+                'Votre photo de profil a bien été ajoutée !'
+            );
+            return $this->redirectToRoute('profile', [
+                'id' => $user->getId()
+            ]);
+        }
+
+        if ($this->accountAccessSecurity($user)) {
+            return $this->render('profile/editPicture.html.twig', [
+                'user' => $user,
+                'picture' => $user->getPictureUser(),
+                'form' => $form->createView()
+            ]);
+        }
+    }
 
     /**
      * @param User $user
