@@ -122,6 +122,37 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/trick/modifier-trick/{id}", name="trick_edit", methods="GET|POST")
+     * @param Trick $trick
+     * @param Request $request
+     * @return Response
+     */
+    public function editTrick(Trick $trick, Request $request): Response
+    {
+        $form = $this->createForm(TrickEditionDataType::class, $trick);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $trick->setModifiedAt(new \DateTime());
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Trick modifié avec succès');
+            return $this->redirectToRoute('trick_edit', [
+                'id' => $trick->getId(),
+            ]);
+        }
+
+        return $this->render('trick/editTrick.html.twig', [
+            'trick' => $trick,
+            'form' => $form->createView(),
+            'videos' => $trick->getVideoTricks(),
+            'pictures' => $trick->getPictureTricks()
+        ]);
+    }
+
+
  
 }
 

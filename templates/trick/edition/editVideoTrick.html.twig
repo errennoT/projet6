@@ -1,0 +1,39 @@
+{% extends 'base.html.twig'  %}
+
+{% block title %}
+Modifier une vidéo
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="h3 mb-3 font-weight-normal">Modifier une vidéo</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="embed-responsive" style="height:200px; width:237px;">
+                {{ videoTrick.url|raw }}
+            </div>
+        </div>
+    </div>
+
+
+    {{form_start(form)}}
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-2">
+            {{ form_row(form.url) }}
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-2">
+            <button class="btn btn-primary ">Modifier la vidéo</button>
+        </div>
+    </div>
+    {{form_end(form)}}
+</div>
+</div>
+{% endblock %}
