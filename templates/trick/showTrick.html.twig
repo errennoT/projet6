@@ -1,0 +1,182 @@
+{% extends 'base.html.twig'  %}
+
+{% block title %}
+{{trick.name}}
+{% endblock %}
+
+{% block body %}
+
+{% for message in app.flashes('success')%}
+<div class="row justify-content-md-center mt-4">
+    <div class="col-md-4">
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="border container mt-5">
+
+    {% if trick.nameDefaultPicture == 'NULL' %}
+    <div class="row" style="position: absolute;">
+            <a class="btn btn-warning" href="{{path('trick_add_picture', {id: trick.id}) }}" style="margin: 10px 0 0 10px;">
+                <i class="fas fa-pencil-alt  "></i>
+            </a>
+        </div>
+
+    <div class="row">
+        <img src="{{ asset('images/NoImageFound.png') }}" style="width:100%; height: auto;">
+    </div>
+    {% else %}
+    <div class="row">
+        <img src="{{ asset('uploads/'~ trick.nameDefaultPicture) }}" style="width:100%; height: auto;">
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-center">
+        <h1 class="title_trick">{{trick.name}}</h1>
+    </div>
+
+    <div class="d-flex justify-content-center" onclick="myFunction()">
+        <button class="btn btn-info mt-3 see_media">Voir les médias</button>
+    </div>
+    <div class="see_media" id="see_media">
+        <div class="d-flex align-content-start flex-wrap mt-3">
+            {% for picture in pictures %}
+            <div class="p-2">
+                <img src="{{ asset('uploads/'~ picture.name) }}" height="150px" width="200px">
+            </div>
+            {% endfor %}
+
+
+            {% for video in videos %}
+            <div class="p-2 mt-2 ml-2 mr-2 embed-responsive embed-responsive-16by9" style="width:200px; height:150px">
+                {{ video.url|raw }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row ml-4 mt-4">
+        <p class="mb-3 font-weight-normal">{{trick.description | nl2br}}</p>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="p-2">
+            <span class="list-group-item list-group-item-primary">Catégorie: {{trick.category}}</span>
+        </div>
+        <div class="p-2">
+            <span class="list-group-item list-group-item-secondary">Ajouté le:
+                {{trick.createdAt | date('d-m-Y')}}</span>
+        </div>
+        {% if not trick.modifiedAt == null %}
+        <div class="p-2">
+            <span class="list-group-item list-group-item-dark">Modifié le:
+                {{trick.modifiedAt | date('d-m-Y')}}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if is_granted('ROLE_USER') %}
+    <hr>
+
+    {{form_start(form)}}
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-6">
+            {{ form_row(form.content) }}
+            {{ form_row(form.submit) }}
+        </div>
+    </div>
+
+    {{form_end(form)}}
+    {% endif %}
+
+    {% if not app.user %}
+    <hr>
+    <div class="row mb-2">
+        <div class="col-md-8 ml-auto mr-auto mb-2">
+            <p class="text-center">Vous pouvez commenter ce trick en vous <a class="btn btn-outline-info"
+                    href="{{ path('app_login') }}">connectant</a> ou en <a class="btn btn-outline-info"
+                    href="{{path('inscription')}}">enregistrant</a></p>
+        </div>
+    </div>
+    {% endif %}
+
+    <hr>
+    {% if comments is empty %}
+    <div class="row mb-2">
+        <div class="col-md-8 ml-auto mr-auto mb-2">
+            <h4 class="text-center mb-4">Il n'y a pas de commentaire pour le moment</h4>
+        </div>
+    </div>
+    {% else %}
+    <div class="row mb-2" >
+        <div class="col-md-8 ml-auto mr-auto mb-2">
+            <h4 class="text-center mb-4">Commentaires</h4>
+            <ul class="list-unstyled" id="commentList">
+                {% for comment in comments %}
+                <li class="media mb-3">
+                    {% if comment.userId.pictureUser.name is not defined %}
+                    <img class="mt-3 mr-2 rounded-circle" src="/images/default_picture.jpeg" height="100px"
+                        width="100px">
+                    {% else %}
+                    <img class="mt-3 mr-2 rounded-circle" src="{{ asset('uploads/'~ comment.userId.pictureUser.name) }}"
+                        height="100px" width="100px">
+                    {% endif %}
+                    <div class="media-body ">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mt-0 mb-1 card-title">{{ comment.userId.username | upper }}</h5>
+
+                                <p class="card-text">{{ comment.content | nl2br }}</p>
+
+                                <span class="badge badge-primary float-right">le
+                                    {{ comment.createdAt | date('d-m-Y à H:i') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="row mt-3 mb-3">
+                <a class="m-auto" id="loadMoreCommentBTN">
+                    <button class="btn btn-primary ">Voir plus</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+{% block javascripts %}
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    click = 0;
+    $("#btn-up").hide();
+
+    function loadMoreComment(event) {
+        event.preventDefault();
+        click++;
+        let comment = 5 * click;
+        const url = "{{ path('load_more_comment' , {category: trick.category, id: trick.id}) }}" + '/' + comment;
+        axios.get(url).then(function (response) {
+            $("#commentList").append(response.data);
+            if (comment === 5) {
+                $("#btn-up").show();
+            }
+        }).catch(function (error) {
+            if (error.response.status === 404) {
+                window.alert("Erreur ! la page demander n'existe pas.");
+            } else {
+                window.alert("Alert une erreure c'est produite veuillez contacter le support !");
+            }
+        });
+    }
+
+    document.getElementById('loadMoreCommentBTN').addEventListener('click', loadMoreComment);
+</script>
+{% endblock %}
