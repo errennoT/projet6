@@ -60,5 +60,57 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-   
+    /**
+     * @Route("/mot-de-passe-oublie/{value}", name="reset_password")
+     * @param Request $request
+     * @param Token $token
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param TokenRepository $tokenRepository
+     * @return Response
+     */
+    public function resetPassword(Request $request, Token $token, UserPasswordEncoderInterface $passwordEncoder, TokenRepository $tokenRepository): Response
+    {
+        if ($token->isValid()) {
+            $user = $token->getUserId();
+
+            $form = $this->createForm(ResetUserPasswordType::class, $user);
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($token->isValid()) {
+                    $user->setPassword(
+                        $passwordEncoder->encodePassword(
+                            $user,
+                            $form->get('password')->getData()
+                        )
+                    );
+
+                    $allToken = $tokenRepository->findBy([
+                        'user_id' => $user
+                    ]);
+
+                    foreach ($allToken as $oneToken) {
+                        $this->entityManager->remove($oneToken);
+                    }
+
+                    $this->entityManager->flush();
+
+                    $this->addFlash('success', "Le mot de passe a bien été changé");
+                    return $this->redirectToRoute('app_login');
+                } else {
+
+                    $this->addFlash('error', "Trop tard, le mot n'a pas été changé car le lien a été invalidé");
+
+                    $this->entityManager->remove($token);
+                    $this->entityManager->flush();
+                }
+            }
+
+            return $this->render('profile/resetPassword.html.twig', [
+                'form' => $form->createView()
+            ]);
+        };
+        echo "token invalide";
+    }
 }
