@@ -1,0 +1,38 @@
+{% extends 'base.html.twig'  %}
+
+{% block title %}
+Commentaire
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row mb-2">
+        <div class="col-md-8 ml-auto mr-auto mb-2">
+            <h4 class="text-center mb-4">Commentaire de {{ comment.userId.username|upper }}</h4>
+            <ul class="list-unstyled">
+                <li class="media mb-3">
+                    <img class="mt-3 mr-2 rounded-circle" src="{{ asset('uploads/'~ comment.userId.pictureUser.name) }}"
+                        height="100px" width="100px">
+                    <div class="media-body ">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mt-0 mb-1 card-title">{{ comment.userId.username | upper }}</h5>
+
+                                <p class="card-text">{{ comment.content | nl2br }}</p>
+
+                                <span class="badge badge-primary float-right">le
+                                    {{ comment.createdAt | date('d-m-Y à H:i') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <form class="float-right" method="POST" action="{{ path('admin_comment_delete', {id: comment.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer le commentaire ?')">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id )}}">
+                    <button class="btn btn-danger">Supprimer</button>
+                </form>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
