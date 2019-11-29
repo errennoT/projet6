@@ -190,4 +190,71 @@ class TrickController extends AbstractController
             ]);
         }
     }
+
+     /**
+     * @Route("/trick/modifier-trick/modifier-photo/{id}", name="trick_add_picture")
+     * @param Trick $trick
+     * @param Request $request
+     */
+    public function editDefaultPicture(Trick $trick, Request $request, FileUploader $fileUploader): Response
+    {
+        $form = $this->createForm(TrickEditionPictureType::class, $trick);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $trick = $form->getData();
+
+            if ($trick->getDefaultPicture() !== null) {
+                if ($trick->getDefaultPicture() == 'NULL') {
+                    $fileUploader->removeFile($trick->getNameDefaultPicture());
+                }
+                $trick->setModifiedAt(new \DateTime());
+                $defaultPicture = $trick->getDefaultPicture();
+                $fileName = $fileUploader->upload($defaultPicture);
+                $trick->setNameDefaultPicture($fileName);
+            }
+
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Photo à la une changée avec succès');
+            return $this->redirectToRoute('trick_edit', [
+                'id' => $trick->getId()
+            ]);
+        }
+
+        return $this->render('trick/edition/addPictureTrick.html.twig', [
+            'trick' => $trick,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/trick/modifier-trick/photo/{id}", name="trick_edit_picture")
+     * @param PictureTrick $pictureTrick
+     */
+    public function editPicture(PictureTrick $pictureTrick, Request $request, FileUploader $fileUploader): Response
+    {
+        $form = $this->createForm(TrickPictureType::class, $pictureTrick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $fileUploader->removeFile($pictureTrick->getName());
+            $pictureTrick = $form->getData();
+            $file = $pictureTrick->getFile();
+            $fileName = $fileUploader->upload($file);
+            $pictureTrick->setName($fileName);
+
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Photo changée avec succès');
+            return $this->redirectToRoute('trick_edit', [
+                'id' => $pictureTrick->getRelation()->getId()
+            ]);
+        }
+
+        return $this->render('trick/edition/editPictureTrick.html.twig', [
+            'pictureTrick' => $pictureTrick,
+            'form' => $form->createView()
+        ]);
+    }
 }
