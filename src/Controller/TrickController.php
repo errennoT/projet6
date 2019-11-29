@@ -323,4 +323,15 @@ class TrickController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/{category}/{id}/{comment<\d+>?5}", name="load_more_comment")
+     */
+    public function loadMoreComment(CommentRepository $commentRepository, $comment = 5, Trick $trick)
+    {
+        return $this->render('trick/loadMoreComments.html.twig', [
+                'comments' => $commentRepository->findAllByTrick($trick->getId(), $comment)
+            ]
+        );
+    }
 }
