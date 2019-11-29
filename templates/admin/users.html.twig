@@ -1,0 +1,73 @@
+{% extends 'base.html.twig'  %}
+
+{% block title %}
+    Admin Utilisateurs
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-5">
+                <h1 class="h2 mb-3 font-weight-normal">Administrer les utilisateurs</h1>
+            </div>
+        </div>
+
+        {% for message in app.flashes('success')%}
+            <div class="row justify-content-md-center">
+                <div class="col-md-4">
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <table class="table table-bordered mt-4">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Utilisateur</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Rôle</th>
+                    <th scope="col">Modifier</th>
+                    <th scope="col">Passer en</th>
+                    <th scope="col">Supprimer</th>
+                </tr>
+            </thead>
+
+            {% for user in users %}
+                <tbody>
+                    <tr>
+                        <td>{{user.username}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{ user.roles[0] == 'ROLE_ADMIN' ? 'Administrateur' : 'Utilisateur' }}</td>
+                        <td>
+                            <a href="{{path('admin_user_edit', {id: user.id}) }}">Modifier</a>
+                        </td>
+                        <td>
+                            {% if user.roles[0] == "ROLE_USER" %}
+                                <form method="POST" action="{{ path('admin_user_setadmin', {id: user.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('setAdmin' ~ user.id )}}">
+                                    <button class="btn btn-success">Administrateur</button>
+                                </form>
+                            {% endif %}
+                            {% if user.roles[0] == "ROLE_ADMIN" %}
+                                <form method="POST" action="{{ path('admin_user_unsetadmin', {id: user.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('unsetAdmin' ~ user.id )}}">
+                                    <button class="btn btn-warning">Utilisateur</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer l\'utilisateur ?')">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id )}}">
+                                <button class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
