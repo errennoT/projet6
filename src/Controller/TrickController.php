@@ -274,4 +274,28 @@ class TrickController extends AbstractController
             ]);
         }
     }
+
+    /**
+     * @Route("/trick/modifier-trick/video/{id}", name="trick_edit_video")
+     * @param VideoTrick $videoTrick
+     */
+    public function editVideo(VideoTrick $videoTrick, Request $request): Response
+    {
+        $form = $this->createForm(videoType::class, $videoTrick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $videoTrick = $form->getData();
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Vidéo changée avec succès');
+            return $this->redirectToRoute('trick_edit', [
+                'id' => $videoTrick->getRelation()->getId()
+            ]);
+        }
+
+        return $this->render('trick/edition/editVideoTrick.html.twig', [
+            'videoTrick' => $videoTrick,
+            'form' => $form->createView()
+        ]);
+    }
 }
