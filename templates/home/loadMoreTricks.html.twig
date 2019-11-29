@@ -1,0 +1,29 @@
+{% for trick in tricks %}
+<div class="col-md-3 col-sm-6 mt-2 trick">
+    <div class="card card-home m-1">
+        <a href="{{ path('trick_show', {trick: trick.id, category: trick.category})}} ">
+            {% if trick.nameDefaultPicture == null %}
+            <img class="card-img-top" src="uploads/NoImageFound.png)" width="416px" height="200px">
+            {% else %}
+            <img class="card-img-top" src="{{ asset('uploads/'~ trick.nameDefaultPicture) }}" alt="" width="416px"
+                height="200px">
+            {% endif %}
+        </a>
+        <div class="card-body">
+            <h6 class="float-left">{{ trick.name }}</h6>
+            {% if is_granted('ROLE_USER') %}
+            <form method="POST" action="{{ path('trick_delete', {trick: trick.id}) }}"
+                onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id )}}">
+                <button class="float-right" style="all: unset; cursor: pointer;"><i
+                        class="fas fa-trash-alt"></i></button>
+            </form>
+            <a class="float-right mr-2" href="{{path('trick_edit', {id: trick.id}) }}">
+                <i class="fas fa-pencil-alt"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
