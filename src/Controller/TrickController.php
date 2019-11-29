@@ -85,4 +85,43 @@ class TrickController extends AbstractController
         ]);
     }
 
+     /**
+     * @Route("/trick/supprimer-trick/{trick}", name="trick_delete", methods="DELETE")
+     * @param Trick $trick
+     * @param Request $request
+     */
+    public function deleteTrick(Trick $trick, Request $request, FileUploader $fileUploader)
+    {
+        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->get('_token'))) {
+
+            $fileUploader->removeFile($trick->getNameDefaultPicture ());
+            $pictures = $trick->getPictureTricks();
+            foreach ($pictures as $picture) {
+                $fileUploader->removeFile($picture->getName());
+            }
+
+            $this->entityManager->remove($trick);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Trick supprimé avec succès');
+            return $this->redirectToRoute('home');
+        }
+    }
+
+    /**
+     * @Route("/{category}/{trick}", name="trick_show")
+     * @param Trick $trick
+     * @return Response
+     */
+    public function showTrick(Trick $trick): Response
+    {
+       
+        return $this->render('trick/showTrick.html.twig', [
+            'trick' => $trick,
+            'pictures' => $trick->getPictureTricks(),
+            'videos' => $trick->getVideoTricks(),
+        ]);
+    }
+
+ 
 }
+
