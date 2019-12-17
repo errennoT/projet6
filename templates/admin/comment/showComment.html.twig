@@ -6,7 +6,7 @@ Commentaire
 
 {% block body %}
 <div class="container mt-4">
-    <div class="row mb-2">
+    <div class="row mb-5">
         <div class="col-md-8 ml-auto mr-auto mb-2">
             <h4 class="text-center mb-4">Commentaire de {{ comment.userId.username|upper }}</h4>
             <ul class="list-unstyled">
@@ -26,7 +26,7 @@ Commentaire
                         </div>
                     </div>
                 </li>
-                <form class="float-right" method="POST" action="{{ path('admin_comment_delete', {id: comment.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer le commentaire ?')">
+                <form class="float-right mb-2" method="POST" action="{{ path('admin_comment_delete', {id: comment.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer le commentaire ?')">
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id )}}">
                     <button class="btn btn-danger">Supprimer</button>

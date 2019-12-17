@@ -13,11 +13,11 @@ class UpdatePasswordType extends AbstractType
     {
         $builder
             ->add('oldPassword', PasswordType::class, [
-                    'label' => 'Ancien mot de passe :'
+                    'label' => 'Ancien mot de passe'
                 ])
             ->add('plainPassword', RepeatedType::class, [
-                'first_options'  => ['label' => 'Nouveau mot de passe :'],
-                'second_options' => ['label' => 'Confirmer votre nouveau mot de passe :'],
+                'first_options'  => ['label' => 'Nouveau mot de passe'],
+                'second_options' => ['label' => 'Confirmer votre nouveau mot de passe'],
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent être identiques',
                 'options' => [

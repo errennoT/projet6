@@ -9,7 +9,6 @@ use App\Form\UserProfilePictureType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @Route("/compte")
@@ -27,7 +27,7 @@ class AccountController extends AbstractController
     private $entityManager;
     private $session;
 
-    public function __construct(UserRepository $repository, ObjectManager $entityManager, SessionInterface $session)
+    public function __construct(UserRepository $repository, EntityManagerInterface $entityManager, SessionInterface $session)
     {
         $this->repository = $repository;
         $this->entityManager = $entityManager;
@@ -143,9 +143,7 @@ class AccountController extends AbstractController
             $profilePicture->setName($fileName);
             $user->setPictureUser($profilePicture);
             $this->entityManager->flush();
-            $this->addFlash(
-                'success',
-                'Votre photo de profil a bien été ajoutée !'
+            $this->addFlash('success', 'Votre photo de profil a bien été ajoutée !'
             );
             return $this->redirectToRoute('profile', [
                 'id' => $user->getId()
