@@ -5,14 +5,28 @@ Accueil - SnowTricks
 {% endblock %}
 
 {% block body %}
-<img src="/images/banner.jpg" alt="card-img-top" style="width:100%;height:auto">
+<header style=" background-image: url({{ asset('images/banner.jpg') }});">
+    <div class="container">
+        <div class="intro-text">
+            <div class="intro-lead-in">Bienvenue sur le site communautaire de tricks pour Snowboarder!
+            </div>
+            <div class="intro-heading text-uppercase">A fond</br>les tricks</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12" style="margin-bottom: 10px;">
+                <a class="btn btn-primary text-uppercase js-scroll-trigger float-right" href="#portfolio">
+                    <img src="{{ asset('images/angle-double-down-solid.svg') }}" height="25px"></a>
+            </div>
+        </div>
+    </div>
+</header>
 
 <section id="portfolio">
-    <div class="container mt-4">
-        <div class="row" id="trickList">
+    <div class="container mt-4" id="up-top">
+        <div class="row flex" id="trickList">
             {% for trick in tricks %}
-            <div class="col-md-3 col-sm-6 mt-2 trick">
-                <div class="card card-home m-1">
+            <div class="col-lg-3 col-sm-6 col-xs-12 trick">
+                <div class="card card-home m-2 shadow bg-white rounded">
                     <a href="{{ path('trick_show', {trick: trick.id, category: trick.category})}} ">
                         {% if trick.nameDefaultPicture == 'NULL' %}
                         <img class="card-img-top" src="{{ asset('images/NoImageFound.png') }}" width="416px" height="200px">
@@ -24,15 +38,13 @@ Accueil - SnowTricks
                     <div class="card-body">
                         <h6 class="float-left">{{ trick.name }}</h6>
                         {% if is_granted('ROLE_USER') %}
-                        <form method="POST" action="{{ path('trick_delete', {trick: trick.id}) }}"
-                            onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')">
+                        <form method="POST" action="{{ path('trick_delete', {trick: trick.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce trick ?')">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id )}}">
-                            <button class="float-right" style="all: unset; cursor: pointer;"><i
-                                    class="fas fa-trash-alt"></i></button>
+                            <button class="float-right" style="all: unset; cursor: pointer;"><img src="{{ asset('images/delete.svg') }}" height="16px"></button>
                         </form>
                         <a class="float-right mr-2" href="{{path('trick_edit', {id: trick.id}) }}">
-                            <i class="fas fa-pencil-alt"></i>
+                            <img src="{{ asset('images/edit.svg') }}" height="16px">
                         </a>
                         {% endif %}
                     </div>
@@ -40,14 +52,17 @@ Accueil - SnowTricks
             </div>
             {% endfor %}
         </div>
-        <div class="row mt-3 mb-3">
+        <div class="row mt-3 mb-5">
             <a class="m-auto" id="loadMoreBTN">
-                <button class="btn btn-primary ">Voir plus</button>
+                <button class="btn btn-primary">Voir plus</button>
+            </a>
+            <a id="btn-up" href="#up-top" class="btn btn-primary float-right js-scroll-trigger">
+            <img src="{{ asset('images/angle-double-up-solid.svg') }}" height="25px">
             </a>
         </div>
     </div>
-
 </section>
+
 {% endblock %}
 {% block javascripts %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
