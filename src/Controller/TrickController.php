@@ -139,15 +139,6 @@ class TrickController extends AbstractController
             ]);
         }
 
-        return $this->render('trick/showTrick.html.twig', [
-            'trick' => $trick,
-            'pictures' => $trick->getPictureTricks(),
-            'videos' => $trick->getVideoTricks(),
-            'form' => $form->createView(),
-            'comments' => $comments
-        ]);
-    }
-
     /**
      * @Route("/trick/modifier-trick/{id}", name="trick_edit", methods="GET|POST")
      * @param Trick $trick

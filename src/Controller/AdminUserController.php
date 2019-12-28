@@ -25,7 +25,9 @@ class AdminUserController extends AbstractController
     private $repository;
     private $entityManager;
 
+
     public function __construct(UserRepository $repository, EntityManagerInterface $entityManager)
+
     {
         $this->repository = $repository;
         $this->entityManager = $entityManager;
