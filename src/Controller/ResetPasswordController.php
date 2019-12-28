@@ -8,18 +8,18 @@ use App\Form\ResetUserPasswordType;
 use App\Repository\TokenRepository;
 use App\Repository\UserRepository;
 use App\Service\MailManager;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ResetPasswordController extends AbstractController
 {
     private $entityManager;
 
-    public function __construct(ObjectManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -106,11 +106,11 @@ class ResetPasswordController extends AbstractController
                     $this->entityManager->flush();
                 }
             }
-
             return $this->render('profile/resetPassword.html.twig', [
                 'form' => $form->createView()
             ]);
-        };
-        echo "token invalide";
+        } else {
+            return $this->render('profile/errorToken.html.twig');
+        }
     }
 }

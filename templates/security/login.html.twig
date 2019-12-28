@@ -5,7 +5,7 @@
 
 {% block body %}
 <div class="container mt-4">
-    <form method="post">
+    <form method="post" class="login">
         {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
@@ -57,7 +57,7 @@
             </div>
         </div>
     </form>
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center mb-5">
         <div class="col-md-2 mt-4">
             <a href="{{path('inscription')}}">Pas de compte ?</a>
         </div>

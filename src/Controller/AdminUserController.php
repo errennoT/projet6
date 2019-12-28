@@ -9,12 +9,12 @@ use App\Form\UserProfilePictureType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @Route("/admin")
@@ -25,7 +25,9 @@ class AdminUserController extends AbstractController
     private $repository;
     private $entityManager;
 
-    public function __construct(UserRepository $repository, ObjectManager $entityManager)
+
+    public function __construct(UserRepository $repository, EntityManagerInterface $entityManager)
+
     {
         $this->repository = $repository;
         $this->entityManager = $entityManager;

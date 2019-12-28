@@ -7,17 +7,15 @@ use App\Entity\Token;
 use App\Entity\User;
 use Swift_Mailer;
 use Swift_Message;
-use Twig_Environment;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class MailManager
+class MailManager extends AbstractController
 {
     private $mailer;
-    private $twig;
 
-    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig)
+    public function __construct(Swift_Mailer $mailer)
     {
         $this->mailer = $mailer;
-        $this->twig = $twig;
     }
 
     public function SendMail(User $user, Token $token)
@@ -26,7 +24,7 @@ class MailManager
             ->setFrom('snowtricks@ooclassrooms.com')
             ->setTo($user->getEmail())
             ->setBody(
-                $this->twig->render(
+                $this->render(
                     'mail/resetPassword.html.twig', [
                     'token' => $token->getValue(),
                     'username' => $user->getUsername()

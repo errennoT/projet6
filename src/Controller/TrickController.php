@@ -16,12 +16,13 @@ use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class TrickController extends AbstractController
 {
@@ -30,7 +31,7 @@ class TrickController extends AbstractController
     private $entityManager;
     private $session;
 
-    public function __construct(TrickRepository $repository, ObjectManager $entityManager, SessionInterface $session)
+    public function __construct(TrickRepository $repository, EntityManagerInterface $entityManager, SessionInterface $session)
     {
         $this->repository = $repository;
         $this->entityManager = $entityManager;
@@ -94,7 +95,7 @@ class TrickController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->get('_token'))) {
 
-            $fileUploader->removeFile($trick->getNameDefaultPicture());
+            $fileUploader->removeFile($trick->getNameDefaultPicture ());
             $pictures = $trick->getPictureTricks();
             foreach ($pictures as $picture) {
                 $fileUploader->removeFile($picture->getName());
@@ -207,7 +208,7 @@ class TrickController extends AbstractController
         }
     }
 
-     /**
+    /**
      * @Route("/trick/modifier-trick/modifier-photo/{id}", name="trick_add_picture")
      * @param Trick $trick
      * @param Request $request
@@ -274,7 +275,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/trick/modifier-trick/delete/video/{id}", name="trick_delete_video", methods="DELETE")
      * @param VideoTrick $videoTrick
      * @param Request $request

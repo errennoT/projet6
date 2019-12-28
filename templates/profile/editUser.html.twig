@@ -24,7 +24,7 @@ Modifier {{user.username}}
                 {% endif%}
                 <div class="card-body d-flex justify-content-end">
                     <a class="btn btn-warning" href="{{path('picture_edit', {id: user.id})}}">
-                        <i class="fas fa-pencil-alt"></i>
+                        <img src="{{ asset('images/pencil-alt-solid.svg') }}" height="16px">
                     </a>
                 </div>
             </div>
@@ -42,8 +42,10 @@ Modifier {{user.username}}
             {{ form_row(form.email) }}
         </div>
     </div>
-    <div class="row justify-content-md-center">
-        <button class="btn btn-primary mt-3 mb-4">Modifier</button>
+    <div class="row justify-content-md-center mb-5">
+        <div class="col-md-4">
+            <button class="btn btn-primary mt-3 mb-4">Modifier</button>
+        </div>
     </div>
     {{ form_end(form) }}
 </div>

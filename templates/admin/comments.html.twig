@@ -23,7 +23,8 @@
             </div>
         {% endfor %}
 
-        <table class="table table-bordered mt-4">
+<div class="table-responsive container mb-5">
+        <table class="table table-bordered mt-4 mb-5">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">Commentaire</th>
@@ -34,7 +35,7 @@
                 </tr>
             </thead>
 
-            {% for comment in comments %}
+            {% for comment in comments | reverse %}
                 <tbody>
                     <tr>
                         <td><a href="{{path('admin_comment_show', {id: comment.id})}}">{{ comment.content|slice(0,20) }}...</a></td>
@@ -53,4 +54,6 @@
             {% endfor %}
         </table>
     </div>
+</div>
+
 {% endblock %}

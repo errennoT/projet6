@@ -18,7 +18,7 @@ class HomeController extends AbstractController
     public function index(TrickRepository $trickRepository): Response
     {
         return $this->render('home/home.html.twig', [
-            'tricks' => $trickRepository->findBy([], ['created_at' => 'DESC'], 12, 0)
+            'tricks' => $trickRepository->findBy([], ['id' => 'DESC'], 12, 0)
         ]);
     }
 
@@ -28,7 +28,7 @@ class HomeController extends AbstractController
     public function loadMoreTrick(TrickRepository $trickRepository, $trick = 12)
     {
         return $this->render('home/loadMoreTricks.html.twig', [
-                'tricks' => $trickRepository->findBy([], ['created_at' => 'DESC'],12, $trick),
+                'tricks' => $trickRepository->findBy([], ['id' => 'DESC'],12, $trick),
             ]
         );
     }

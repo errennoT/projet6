@@ -8,13 +8,13 @@ Modifier une vidéo
 
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h1 class="h3 mb-3 font-weight-normal">Modifier une vidéo</h1>
         </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="embed-responsive" style="height:200px; width:237px;">
                 {{ videoTrick.url|raw }}
             </div>
@@ -24,12 +24,12 @@ Modifier une vidéo
 
     {{form_start(form)}}
     <div class="row justify-content-center">
-        <div class="col-md-6 mt-2">
+        <div class="col-md-4 mt-2">
             {{ form_row(form.url) }}
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-6 mt-2">
+        <div class="col-md-4 mt-2">
             <button class="btn btn-primary ">Modifier la vidéo</button>
         </div>
     </div>
