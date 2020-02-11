@@ -1,6 +1,6 @@
 # Projet 6 - OpenClassrooms
 
-La BDD est dans le dossier bdd
+La BDD est dans le dossier public
 Les schémas UML sont dans le dossier uml
 
 # Installer le projet
