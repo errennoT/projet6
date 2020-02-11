@@ -138,6 +138,7 @@ class TrickController extends AbstractController
                 'category' => $trick->getCategory()
             ]);
         }
+    }
 
     /**
      * @Route("/trick/modifier-trick/{id}", name="trick_edit", methods="GET|POST")
