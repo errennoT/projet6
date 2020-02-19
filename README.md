@@ -1,27 +1,27 @@
 # Projet 6 - OpenClassrooms
 
-La BDD est dans le dossier public
+La BDD est dans le dossier public <br/>
 Les schémas UML sont dans le dossier uml
 
 # Installer le projet
 
-*Télécharger le dossier github
-*Se positionner dans le dossier du projet
-*Dans le terminal, taper "composer require symfony/swiftmailer-bundle"
-*A la racine du projet, modifier le fichier .env pour régler la bdd
-*Dans phpmyadmin importer la bdd
+*Télécharger le dossier github <br/>
+*Se positionner dans le dossier du projet <br/>
+*Dans le terminal, taper "composer require symfony/swiftmailer-bundle" <br/>
+*A la racine du projet, modifier le fichier .env pour régler la bdd <br/>
+*Dans phpmyadmin importer la bdd <br/>
 
 ## Comment accéder à l'espace administrateur ?
 
-*Se connecter en tant qu'administrateur
-*login = administrateur / mdp= administrateur
-*Donne la possibilité de gérer les utilisateurs, les tricks ainsi que les commentaires
+*Se connecter en tant qu'administrateur <br/>
+*login = administrateur / mdp= administrateur <br/>
+*Donne la possibilité de gérer les utilisateurs, les tricks ainsi que les commentaires <br/>
 
 ## Comment accéder à l'espace utilisateur ?
 
-*Se connecter en tant qu'utilisateur
-*login = utilisateur / mdp= utilisateur
-*Donne la possibilité de gérer les tricks et de commenter les tricks
+*Se connecter en tant qu'utilisateur <br/>
+*login = utilisateur / mdp= utilisateur <br/>
+*Donne la possibilité de gérer les tricks et de commenter les tricks <br/>
 
 ## Etre simple visiteur
 
