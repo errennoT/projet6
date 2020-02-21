@@ -7,7 +7,7 @@ Les schémas UML sont dans le dossier uml
 
 *Télécharger le dossier github <br/>
 *Se positionner dans le dossier du projet <br/>
-*Dans le terminal, taper "composer require symfony/swiftmailer-bundle" <br/>
+*Dans le terminal, taper "composer install" <br/>
 *A la racine du projet, modifier le fichier .env pour régler la bdd <br/>
 *Dans phpmyadmin importer la bdd <br/>
 
